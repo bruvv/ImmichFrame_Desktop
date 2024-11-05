@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImmichFrame</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        #webview {
+            flex: 1;
+            width: 100%;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        button {
+            margin: 0;
+            grid-column: 2;
+        }
+
+        #btnSettings {
+            grid-row: 1;
+            opacity: 0;
+            pointer-events: auto;
+        }
+
+        #btnQuit {
+            grid-row: 3;
+            opacity: 0;
+            pointer-events: auto;
+        }
+
+        /* Modal Styles */
+        #urlModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            animation: modalIn 0.3s ease-out;
+        }
+
+        @keyframes modalIn {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            color: #333;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+
+<body>
+    <webview id="webview" src="https://immichframe.github.io/ImmichFrame/" partition="nopartition" style="flex: 1;"></webview>
+    
+    <div class="grid">
+        <button id="btnSettings">Settings</button>
+        <button id="btnQuit">Quit</button>
+    </div>
+
+    <!-- Modal for URL input -->
+    <div id="urlModal">
+        <div class="modal-content">
+            <h2>ImmichFrame Web URL:</h2>
+            <input type="text" id="urlInput" placeholder="http://example.com">
+            <div class="modal-actions">
+                <button id="saveUrl" class="btn-primary">Save</button>
+                <button id="cancelUrl" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        document.getElementById('btnSettings').addEventListener('click', () => {
+            ipcRenderer.invoke('get-saved-url').then((url) => {
+                document.getElementById('urlInput').value = url || 'http://example.com'; // Default if no URL found
+                document.getElementById('urlModal').style.display = 'flex'; // Show the modal with fade-in
+            });
+        });
+
+        document.getElementById('btnQuit').addEventListener('click', () => {
+            ipcRenderer.send('quit-app'); // Send a quit message to the main process
+        });
+
+        document.getElementById('saveUrl').addEventListener('click', () => {
+            const url = document.getElementById('urlInput').value; // Get the value from the input field
+            if (url) {
+                ipcRenderer.send('save-url', url); // Send the URL to the main process
+                document.getElementById('webview').setAttribute('src', url); // Update the webview
+                document.getElementById('urlModal').style.display = 'none'; // Hide the modal with fade-out
+            }
+        });
+
+        document.getElementById('cancelUrl').addEventListener('click', () => {
+            document.getElementById('urlModal').style.display = 'none'; // Hide the modal with fade-out
+        });
+    </script>
+</body>
+
+</html>
