@@ -83,6 +83,7 @@
                 transform: translateY(-50px);
                 opacity: 0;
             }
+
             100% {
                 transform: translateY(0);
                 opacity: 1;
@@ -157,8 +158,9 @@
 </head>
 
 <body>
-    <webview id="webview" src="https://immichframe.github.io/ImmichFrame/" partition="nopartition" style="flex: 1;"></webview>
-    
+    <webview id="webview" src="https://immichframe.github.io/ImmichFrame/" partition="nopartition" style="flex: 1;">
+    </webview>
+
     <div class="grid">
         <button id="btnSettings">Settings</button>
         <button id="btnQuit">Quit</button>

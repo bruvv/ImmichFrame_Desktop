@@ -10,7 +10,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-		fullscreen: true, // Start in fullscreen mode
+        fullscreen: true, // Start in fullscreen mode
         frame: false, // Remove the window frame (no title bar or menu)
         webPreferences: {
             contextIsolation: false,
@@ -35,7 +35,7 @@ ipcMain.handle('get-saved-url', async () => {
     try {
         const url = fs.readFileSync(urlFilePath, 'utf-8');
         return url; // Return the saved URL
-    } catch (error) {        
+    } catch (error) {
         return 'https://immichframe.github.io/ImmichFrame/'; // Return the default URL
     }
 });
