@@ -24,30 +24,18 @@
       "node_modules/**/*"
     ],
     "mac": {
-      "target": [
-        {
-          "target": "dir",
-          "arch": ["x64", "arm64"]
-        }
-      ],   
+      "target": ["app"],
+      "arch": ["x64", "arm64"],
       "icon": "assets/AppIcon.icns"
     },
     "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": ["x64", "arm64"]
-        }
-      ],        
+      "target": ["portable"],
+      "arch": ["x64", "arm64"],
       "icon": "assets/AppIcon.ico"
     },
     "linux": {
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": ["x64", "armv7l", "arm64"]
-        }
-      ],
+      "target": ["AppImage"],
+      "arch": ["x64", "armv7l", "arm64"],
       "icon": "assets/AppIcon.png"
     }
   }
