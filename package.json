@@ -17,6 +17,7 @@
   "build": {
     "appId": "com.immichframe.immichframe",
     "productName": "ImmichFrame",
+    "publish": "never",
     "files": [
       "main.js",
       "index.html",
