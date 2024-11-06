@@ -58,7 +58,7 @@ jobs:
           # Pack files
           #7z a -tzip "${release_name}.zip" ".dist/${release_name}/*"
           
-          rm -r "$release_name"
+          #rm -r "$release_name"
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
