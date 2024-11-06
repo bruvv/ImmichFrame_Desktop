@@ -46,15 +46,15 @@ jobs:
 
           # Build everything
           if [ "${{ matrix.target }}" == "win-x64" ]; then
-            npm run build -- --win --x64
+            npm run build --win --x64
           elif [ "${{ matrix.target }}" == "win-arm64" ]; then
-            npm run build -- --win --arm64          
+            npm run build --win --arm64          
           elif [ "${{ matrix.target }}" == "linux-arm64" ]; then
-            npm run build -- --linux --arm64
+            npm run build --linux --arm64
           elif [ "${{ matrix.target }}" == "linux-x64" ]; then
-            npm run build -- --linux --x64
+            npm run build --linux --x64
           elif [ "${{ matrix.target }}" == "macos" ]; then
-            npm run build -- --mac --x64
+            npm run build --mac --x64
           fi
 
           # Pack files
