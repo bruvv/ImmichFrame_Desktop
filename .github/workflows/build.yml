@@ -27,11 +27,15 @@ jobs:
             target: osx-x64
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          dotnet-version: 8.0.x
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
       - name: Build Desktop
         shell: bash
         run: |
