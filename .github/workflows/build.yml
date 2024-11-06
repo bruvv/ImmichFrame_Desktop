@@ -43,7 +43,7 @@ jobs:
         run: |
           tag=$(git describe --tags --abbrev=0)
           release_name="ImmichFrame-$tag-${{ matrix.target }}"
-
+          echo "build started"
           # Build everything
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             npm run build --win --x64
@@ -56,9 +56,11 @@ jobs:
           elif [ "${{ matrix.target }}" == "macos" ]; then
             npm run build --mac --x64
           fi
+          echo "build ended"
 
           # Pack files
           #7z a -tzip "${release_name}.zip" ".dist/${release_name}/*"
+          echo "zipping ended"
           
           #rm -r "$release_name"
       - name: Publish
