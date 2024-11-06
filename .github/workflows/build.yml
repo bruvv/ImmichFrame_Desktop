@@ -56,7 +56,7 @@ jobs:
           fi
 
           # Pack files
-          7z a -tzip "${release_name}.zip" ".dist/${release_name}/*"
+          #7z a -tzip "${release_name}.zip" ".dist/${release_name}/*"
           
           rm -r "$release_name"
       - name: Publish
