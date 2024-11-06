@@ -17,7 +17,6 @@
   "build": {
     "appId": "com.immichframe.immichframe",
     "productName": "ImmichFrame",
-    "publish": "never",
     "files": [
       "main.js",
       "index.html",
@@ -26,11 +25,11 @@
     ],
     "mac": {
       "category": "public.app-category.utilities",
-	  "icon": "assets/AppIcon.icns"
+      "icon": "assets/AppIcon.icns"
     },
     "win": {
       "target": "portable",
-	  "icon": "assets/AppIcon.ico"	  
+      "icon": "assets/AppIcon.ico"
     },
     "linux": {
       "target": [
@@ -42,7 +41,7 @@
           ]
         }
       ],
-	  "icon": "assets/AppIcon.png"
+      "icon": "assets/AppIcon.png"
     }
   }
 }
