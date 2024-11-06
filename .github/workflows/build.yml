@@ -63,6 +63,7 @@ jobs:
             npm run build --mac --x64
           fi
           echo "build ended"
+          ls
 
           # Pack files
           7z a -tzip "${release_name}.zip" "./${release_name}/*"
