@@ -89,5 +89,7 @@ jobs:
             dist/*.deb
             dist/*.rpm
             dist/*.app
+            dist/*.pkg
+            dist/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
