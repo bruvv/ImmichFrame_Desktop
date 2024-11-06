@@ -67,7 +67,7 @@ jobs:
           ls
 
           # Pack files
-          7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          #7z a -tzip "${release_name}.zip" "./${release_name}/*"
           echo "zipping ended"
           
           #rm -r "$release_name"
