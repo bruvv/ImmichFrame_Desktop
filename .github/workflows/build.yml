@@ -68,6 +68,9 @@ jobs:
           git tag -a "$TAG_NAME" -m "Automated release $TAG_NAME"
           git push origin "$TAG_NAME"
 
+      - name: Verify Tag Creation
+        run: git tag  # Outputs all tags to verify the new tag is created
+
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         with:
