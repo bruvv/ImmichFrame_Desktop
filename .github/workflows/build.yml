@@ -17,7 +17,9 @@ jobs:
         include:
           - kind: linux-x64
             os: ubuntu-latest
-            target: linux-x64          
+            target: linux-x64  
+          - kind: linux-arm
+            os: ubuntu-latest        
           - kind: linux-arm64
             os: ubuntu-latest
             target: linux-arm64
