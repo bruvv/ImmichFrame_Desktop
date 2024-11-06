@@ -29,24 +29,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build application
+      - name: Build application (Linux and macOS)
+        if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          # For Ubuntu and macOS, use bash syntax
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]] || [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            if [[ "${{ matrix.arch }}" == "x64" ]]; then
-              npm run build -- --linux --x64
-            elif [[ "${{ matrix.arch }}" == "arm64" ]]; then
-              npm run build -- --linux --arm64
-            fi
+          if [[ "${{ matrix.arch }}" == "x64" ]]; then
+            npm run build -- --linux --x64
+          elif [[ "${{ matrix.arch }}" == "arm64" ]]; then
+            npm run build -- --linux --arm64
           fi
         shell: bash
 
-      - name: Build Windows application
+      - name: Build application (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          if (${{ matrix.arch }} -eq 'x64') {
+          if ($env:matrix_arch -eq 'x64') {
             npm run build -- --win --x64
-          } elseif (${{ matrix.arch }} -eq 'arm64') {
+          } elseif ($env:matrix_arch -eq 'arm64') {
             npm run build -- --win --arm64
           }
         shell: pwsh
