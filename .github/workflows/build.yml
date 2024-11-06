@@ -44,25 +44,31 @@ jobs:
       - name: Build Windows application
         if: matrix.os == 'windows-latest'
         run: |
-          if ($env:matrix_arch -eq 'x64') {
+          if (${{ matrix.arch }} -eq 'x64') {
             npm run build -- --win --x64
-          } elseif ($env:matrix_arch -eq 'arm64') {
+          } elseif (${{ matrix.arch }} -eq 'arm64') {
             npm run build -- --win --arm64
           }
         shell: pwsh
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Create Git tag
         if: github.ref == 'refs/heads/main'
         shell: bash
+        env:
+          TAG_NAME: "v${{ github.run_id }}"
         run: |
-          TAG_NAME="v${{ github.run_id }}"
           git tag -a "$TAG_NAME" -m "Automated release $TAG_NAME"
           git push origin "$TAG_NAME"
 
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: $TAG_NAME
+          tag_name: ${{ env.TAG_NAME }}
           files: |
             dist/*.dmg
             dist/*.exe
