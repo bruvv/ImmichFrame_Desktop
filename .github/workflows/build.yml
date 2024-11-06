@@ -13,17 +13,29 @@ jobs:
     name: Release
     strategy:
       matrix:
-        kind: ['linux', 'win', 'mac']
+        kind: ['linux-x64', 'linux-armv7l', 'linux-arm64', 'windows-x64', 'windows-arm64', 'mac-x64', 'mac-arm64']
         include:
-          - kind: linux
+          - kind: linux-x64
             os: ubuntu-latest
-            target: linux           
-          - kind: win
+            target: linux-x64  
+          - kind: linux-armv7l
+            os: ubuntu-latest
+            target: linux-armv7l        
+          - kind: linux-arm64
+            os: ubuntu-latest
+            target: linux-arm64
+          - kind: windows-x64
             os: windows-latest
-            target: win 
-          - kind: mac
+            target: win-x64    
+          - kind: windows-arm64
+            os: windows-latest
+            target: win-arm64               
+          - kind: mac-x64
             os: macos-latest
-            target: mac
+            target: mac-x64
+          - kind: mac-arm64
+            os: macos-latest
+            target: mac-arm64
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,12 +56,20 @@ jobs:
           release_name="ImmichFrame-$tag-${{ matrix.target }}"
           echo "build started"
           # Build everything
-          if [ "${{ matrix.target }}" == "win" ]; then
-            npm run build --win --verbose
-          elif [ "${{ matrix.target }}" == "linux" ]; then
-            npm run build --linux --verbose
-          elif [ "${{ matrix.target }}" == "mac" ]; then
-            npm run build --mac --verbose          
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            npm run build --win --x64 --verbose
+          elif [ "${{ matrix.target }}" == "win-arm64" ]; then
+            npm run build --win --arm64 --verbose  
+          elif [ "${{ matrix.target }}" == "linux-armv7l" ]; then
+            npm run build --linux --armv7l --verbose        
+          elif [ "${{ matrix.target }}" == "linux-arm64" ]; then
+            npm run build --linux --arm64 --verbose
+          elif [ "${{ matrix.target }}" == "linux-x64" ]; then
+            npm run build --linux --x64 --verbose
+          elif [ "${{ matrix.target }}" == "macos-x64" ]; then
+            npm run build --mac --x64 --verbose
+          elif [ "${{ matrix.target }}" == "macos-arm64" ]; then
+            npm run build --mac --arm64 --verbose
           fi
           echo "build ended"
           ls
@@ -69,6 +89,5 @@ jobs:
             dist/*.deb
             dist/*.rpm
             dist/*.app
-            dist/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
