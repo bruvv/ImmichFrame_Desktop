@@ -11,14 +11,11 @@ jobs:
     name: Release
     strategy:
       matrix:
-        kind: ['linux-x64', 'linux-arm', 'linux-arm64', 'windows', 'macOS']
+        kind: ['linux-x64', 'linux-arm64', 'windows', 'macOS']
         include:
           - kind: linux-x64
             os: ubuntu-latest
-            target: linux-x64
-          - kind: linux-arm
-            os: ubuntu-latest
-            target: linux-arm
+            target: linux-x64          
           - kind: linux-arm64
             os: ubuntu-latest
             target: linux-arm64
@@ -45,9 +42,7 @@ jobs:
           if [ "${{ matrix.target }}" == "win-x64" ]; then
             npm run build -- --win --x64
           elif [ "${{ matrix.target }}" == "win-arm64" ]; then
-            npm run build -- --win --arm64
-          elif [ "${{ matrix.target }}" == "linux-arm" ]; then
-            npm run build -- --linux --arm
+            npm run build -- --win --arm64          
           elif [ "${{ matrix.target }}" == "linux-arm64" ]; then
             npm run build -- --linux --arm64
           elif [ "${{ matrix.target }}" == "linux-x64" ]; then
