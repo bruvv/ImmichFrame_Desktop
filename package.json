@@ -24,21 +24,28 @@
       "node_modules/**/*"
     ],
     "mac": {
-      "category": "public.app-category.utilities",
+      "target": [
+        {
+          "target": "dir",
+          "arch": ["x64", "arm64"]
+        }
+      ],   
       "icon": "assets/AppIcon.icns"
     },
     "win": {
-      "target": "portable",
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64", "arm64"]
+        }
+      ],        
       "icon": "assets/AppIcon.ico"
     },
     "linux": {
       "target": [
         {
           "target": "AppImage",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
+          "arch": ["x64", "armv7l", "arm64"]
         }
       ],
       "icon": "assets/AppIcon.png"

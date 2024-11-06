@@ -13,23 +13,29 @@ jobs:
     name: Release
     strategy:
       matrix:
-        kind: ['linux-x64', 'linux-armv71', 'linux-arm64', 'windows', 'macOS']
+        kind: ['linux-x64', 'linux-armv7l', 'linux-arm64', 'windows-x64', 'windows-arm64', 'mac-x64', 'mac-arm64']
         include:
           - kind: linux-x64
             os: ubuntu-latest
             target: linux-x64  
-          - kind: linux-armv71
+          - kind: linux-armv7l
             os: ubuntu-latest
-            target: linux-armv71        
+            target: linux-armv7l        
           - kind: linux-arm64
             os: ubuntu-latest
             target: linux-arm64
-          - kind: windows
+          - kind: windows-x64
             os: windows-latest
-            target: win-x64          
-          - kind: macOS
+            target: win-x64    
+          - kind: windows-arm64
+            os: windows-latest
+            target: win-arm64               
+          - kind: mac-x64
             os: macos-latest
-            target: osx-x64
+            target: mac-x64
+          - kind: mac-arm64
+            os: macos-latest
+            target: mac-arm64
     runs-on: ${{ matrix.os }}
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,8 +66,10 @@ jobs:
             npm run build --linux --arm64
           elif [ "${{ matrix.target }}" == "linux-x64" ]; then
             npm run build --linux --x64
-          elif [ "${{ matrix.target }}" == "macos" ]; then
+          elif [ "${{ matrix.target }}" == "macos-x64" ]; then
             npm run build --mac --x64
+          elif [ "${{ matrix.target }}" == "macos-arm64" ]; then
+            npm run build --mac --arm64
           fi
           echo "build ended"
           ls
