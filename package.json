@@ -26,7 +26,7 @@
     "mac": {
       "target": [
         {
-          "target": "app",
+          "target": "pkg",
           "arch": ["x64", "arm64"]
         }
       ],
