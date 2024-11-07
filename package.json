@@ -17,6 +17,7 @@
   "build": {
     "appId": "com.immichframe.immichframe",
     "productName": "ImmichFrame",
+    "publish": null,
     "files": [
       "main.js",
       "index.html",
@@ -24,17 +25,42 @@
       "node_modules/**/*"
     ],
     "win": {
-      "target": "portable",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "icon": "assets/AppIcon.ico",
       "artifactName": "immichframe-${version}-${arch}-win.${ext}"
     },
     "linux": {
-      "target": "AppImage",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "armv7l",
+            "arm64"
+          ]
+        }
+      ],
       "icon": "assets/AppIcon.png",
       "artifactName": "immichframe-${version}-${arch}-linux.${ext}"
     },
     "mac": {
-      "target": "zip",
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "icon": "assets/AppIcon.icns",
       "artifactName": "immichframe-${version}-${arch}-mac.${ext}"
     }
