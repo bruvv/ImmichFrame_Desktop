@@ -57,19 +57,19 @@ jobs:
           echo "build started"
           # Build everything
           if [ "${{ matrix.target }}" == "win-x64" ]; then
-            npm run build --win --x64 --verbose --config.build.win.target=portable
+            npm run build --win --x64 --verbose
           elif [ "${{ matrix.target }}" == "win-arm64" ]; then
-            npm run build --win --arm64 --verbose --config.build.win.target=portable  
+            npm run build --win --arm64 --verbose  
           elif [ "${{ matrix.target }}" == "linux-armv7l" ]; then
-            npm run build --linux --armv7l --verbose --config.build.linux.target=AppImage       
+            npm run build --linux --armv7l --verbose        
           elif [ "${{ matrix.target }}" == "linux-arm64" ]; then
-            npm run build --linux --arm64 --verbose --config.build.linux.target=AppImage
+            npm run build --linux --arm64 --verbose
           elif [ "${{ matrix.target }}" == "linux-x64" ]; then
-            npm run build --linux --x64 --verbose --config.build.linux.target=AppImage
+            npm run build --linux --x64 --verbose
           elif [ "${{ matrix.target }}" == "mac-x64" ]; then
-            npm run build --mac --x64 --verbose --config.build.mac.target=pkg
+            npm run build --mac --x64 --verbose
           #elif [ "${{ matrix.target }}" == "mac-arm64" ]; then
-            #npm run build --mac --arm64 --verbose --config.build.mac.target=pkg
+            #npm run build --mac --arm64 --verbose
           fi
           echo "build ended"
           ls

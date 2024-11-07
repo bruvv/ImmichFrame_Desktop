@@ -23,6 +23,17 @@
       "package.json",
       "node_modules/**/*"
     ],
-    "icon": "assets/AppIcon"
+    "win": {
+      "target": "portable",
+      "icon": "assets/AppIcon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/AppIcon.png"
+    },
+    "mac": {
+      "target": "pkg",
+      "icon": "assets/AppIcon.icns"
+    }
   }
 }
