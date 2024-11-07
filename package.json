@@ -31,12 +31,12 @@
     "linux": {
       "target": "AppImage",
       "icon": "assets/AppIcon.png",
-      "artifactName": "immichframe-${version}-${arch}-win.${ext}"
+      "artifactName": "immichframe-${version}-${arch}-linux.${ext}"
     },
     "mac": {
       "target": "zip",
       "icon": "assets/AppIcon.icns",
-      "artifactName": "immichframe-${version}-${arch}-win.${ext}"
+      "artifactName": "immichframe-${version}-${arch}-mac.${ext}"
     }
   }
 }
