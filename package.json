@@ -25,15 +25,18 @@
     ],
     "win": {
       "target": "portable",
-      "icon": "assets/AppIcon.ico"
+      "icon": "assets/AppIcon.ico",
+      "artifactName": "immichframe-${version}-${arch}-win.${ext}"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "assets/AppIcon.png"
+      "icon": "assets/AppIcon.png",
+      "artifactName": "immichframe-${version}-${arch}-win.${ext}"
     },
     "mac": {
       "target": "zip",
-      "icon": "assets/AppIcon.icns"
+      "icon": "assets/AppIcon.icns",
+      "artifactName": "immichframe-${version}-${arch}-win.${ext}"
     }
   }
 }
