@@ -68,8 +68,8 @@ jobs:
             npm run build --linux --x64 --verbose
           elif [ "${{ matrix.target }}" == "mac-x64" ]; then
             npm run build --mac --x64 --verbose
-          elif [ "${{ matrix.target }}" == "mac-arm64" ]; then
-            npm run build --mac --arm64 --verbose
+          #elif [ "${{ matrix.target }}" == "mac-arm64" ]; then
+            #npm run build --mac --arm64 --verbose
           fi
           echo "build ended"
           ls

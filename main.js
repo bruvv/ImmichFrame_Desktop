@@ -16,6 +16,7 @@ function createWindow() {
             contextIsolation: false,
             nodeIntegration: true,
             webviewTag: true,
+            session: require('electron').session.fromPartition('persist:no-cache')
         },
     });
 
