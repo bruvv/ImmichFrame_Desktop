@@ -32,7 +32,7 @@
       "icon": "assets/AppIcon.png"
     },
     "mac": {
-      "target": "pkg",
+      "target": "zip",
       "icon": "assets/AppIcon.icns"
     }
   }
