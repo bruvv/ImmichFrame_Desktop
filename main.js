@@ -5,33 +5,48 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 let mainWindow;
 const urlFilePath = path.join(app.getPath('userData'), 'settings.txt');
 
-// Function to create the main window
 function createWindow() {
+    const customSession = require('electron').session.fromPartition('persist:no-cache');
+
+    // Set headers to disable cache
+    customSession.webRequest.onBeforeSendHeaders((details, callback) => {
+        details.requestHeaders['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+        callback({ requestHeaders: details.requestHeaders });
+    });
+
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        fullscreen: true, // Start in fullscreen mode
-        frame: false, // Remove the window frame (no title bar or menu)
+        fullscreen: true,
+        frame: false,
         webPreferences: {
             contextIsolation: false,
             nodeIntegration: true,
             webviewTag: true,
-            session: require('electron').session.fromPartition('persist:no-cache')
+            session: customSession,  // Using custom session to disable cache
         },
     });
 
     // Load the last saved URL or a default one
     if (fs.existsSync(urlFilePath)) {
         const savedUrl = fs.readFileSync(urlFilePath, 'utf-8');
+        const cacheBustedUrl = `${savedUrl}?_=${Date.now()}`;  // Add timestamp to URL to avoid caching
+        
+        // Load index.html and set the webview src
         mainWindow.loadFile('index.html').then(() => {
-            mainWindow.webContents.executeJavaScript(`document.getElementById('webview').setAttribute('src', '${savedUrl}');`);
+            mainWindow.webContents.executeJavaScript(`
+                const webview = document.getElementById('webview');
+                if (webview) {
+                    webview.src = '${cacheBustedUrl}';
+                }
+            `).catch((err) => console.error('Failed to set webview src:', err));
         });
     } else {
         mainWindow.loadFile('index.html');
     }
 }
 
-// IPC listener to retrive URL
+// IPC listener to retrieve URL
 ipcMain.handle('get-saved-url', async () => {
     try {
         const url = fs.readFileSync(urlFilePath, 'utf-8');
