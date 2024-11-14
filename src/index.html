@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ImmichFrame</title>
+  <style>
+    /* Styles for fullscreen iframe */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+
+    /* Style for invisible buttons */
+    .invisible-button {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background-color: transparent;
+      border: none;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      /* Hidden by default */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Positioning the buttons */
+    #btnSettings {
+      top: 20px;
+      /* Top middle of the screen */
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #btnQuit {
+      bottom: 20px;
+      /* Bottom middle of the screen */
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+  <script type="module" src="/main.js" defer>
+    // Import Tauri API
+    import { appWindow } from '@tauri-apps/api/window';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Event listener for the settings button
+      document.getElementById('btnSettings').addEventListener('click', () => {
+        console.log('Settings button clicked');
+        // Add your custom code here, e.g., open a settings modal
+      });
+
+      // Event listener for the quit button
+      document.getElementById('btnQuit').addEventListener('click', () => {
+        console.log('Quit button clicked');
+        // Quit the app using Tauri's appWindow API
+        appWindow.close();
+      });
+    });
+    // Handle clicks on links inside the iframe
+    const iframe = document.getElementById('webview');
+    iframe.addEventListener('load', () => {
+      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+      // Find all anchor tags inside the iframe
+      const links = iframeDocument.querySelectorAll('a');
+
+      links.forEach(link => {
+        link.addEventListener('click', function (event) {
+          event.preventDefault(); // Prevent the default action of the link
+          const url = link.href;
+          window.open(url, '_blank'); // Open the URL in the default browser
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <iframe id="webview" src="https://immichframe.github.io/ImmichFrame/"></iframe>
+  <!-- Invisible buttons -->
+  <button id="btnSettings" class="invisible-button"></button>
+  <button id="btnQuit" class="invisible-button"></button>
+  <!-- Modal for URL Input -->
+  <div id="urlModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Enter URL</h2>
+      <input type="text" id="urlInput" placeholder="Enter the URL..." />
+      <button id="saveUrl">Save</button>
+    </div>
+  </div>
+</body>
+
+</html>
