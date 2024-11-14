@@ -1,7 +1,7 @@
 const { invoke } = window.__TAURI__.core;
 
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   const btnQuit = document.getElementById("btnQuit");
   const btnSettings = document.getElementById("btnSettings");
   const urlModal = document.getElementById("urlModal");
@@ -9,41 +9,74 @@ window.addEventListener("DOMContentLoaded", () => {
   const urlInput = document.getElementById("urlInput");
   const saveUrlBtn = document.getElementById("saveUrl");
   const iframe = document.getElementById("webview");
+  const defaultUrl = "https://immichframe.github.io/ImmichFrame/";
+  
+  try {
+    const savedUrl = await invoke("read_url_from_file") || "";
+    const urlToLoad = savedUrl.trim() ? savedUrl : defaultUrl;
+    if (iframe) {
+      iframe.src = urlToLoad;
+    }
+  } catch (error) {
+    console.error("Error loading saved URL:", error);
+    if (iframe) {
+      iframe.src = defaultUrl;
+    }
+  }
 
   if (btnQuit) {
     btnQuit.addEventListener("click", async () => {
-      console.log("Attempting to quit app"); // Log to console to check if it's triggered
+      console.log("Attempting to quit app");
       try {
-        await invoke("quit_app"); // Call the Rust function to quit
+        await invoke("exit_app");
       } catch (error) {
-        console.error("Error invoking quit_app:", error);
+        console.error("Error invoking exit_app:", error);
       }
     });
-  } 
+  }
   if (btnSettings) {
-    btnSettings.addEventListener("click", () => {
+    btnSettings.addEventListener("click", async () => {
       console.log("Opening settings modal");
-      urlModal.style.display = "flex"; // Show the modal
+      try {
+        const savedUrl = await invoke("read_url_from_file") || "";
+        
+        if (urlInput) {
+          urlInput.value = savedUrl.trim() ? savedUrl : defaultUrl;
+        }
+
+        urlModal.style.display = "flex";
+      } catch (error) {
+        console.error("Error loading saved URL:", error);
+        
+        if (urlInput) {
+          urlInput.value = defaultUrl;
+        }
+
+        urlModal.style.display = "flex";
+      }
     });
   }
   if (closeModal) {
     closeModal.addEventListener("click", () => {
-      urlModal.style.display = "none"; // Hide the modal
+      urlModal.style.display = "none";
     });
   }
   if (saveUrlBtn) {
     saveUrlBtn.addEventListener("click", async () => {
       const url = urlInput.value;
       console.log("URL to show:", url);
-
-      // You can either update the iframe URL directly, or pass the URL to the Rust backend
-      // For now, let's simply log it and close the modal
-     
-      if (iframe) {
-        iframe.src = url; // Set the iframe source to the URL entered
+      
+      try {
+        await invoke("save_url_to_file", { url });
+        console.log("URL saved successfully.");
+      } catch (error) {
+        console.error("Error saving URL:", error);
       }
 
-      // Close modal after saving URL
+      if (iframe) {
+        iframe.src = url;
+      }
+
       urlModal.style.display = "none";
     });
   }
