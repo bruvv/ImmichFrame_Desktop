@@ -1,68 +1,15 @@
 {
   "name": "immichframe",
-  "version": "1.0.0",
-  "main": "main.js",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder"
+    "tauri": "tauri"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "electron": "^33.0.2",
-    "electron-builder": "^25.1.8"
+    "@tauri-apps/cli": "^2"
   },
-  "build": {
-    "appId": "com.immichframe.immichframe",
-    "productName": "ImmichFrame",
-    "publish": null,
-    "files": [
-      "main.js",
-      "index.html",
-      "package.json",
-      "node_modules/**/*"
-    ],
-    "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "assets/AppIcon.ico",
-      "artifactName": "immichframe-${version}-${arch}-win.${ext}"
-    },
-    "linux": {
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64",
-            "armv7l",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "assets/AppIcon.png",
-      "artifactName": "immichframe-${version}-${arch}-linux.${ext}"
-    },
-    "mac": {
-      "target": [
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "assets/AppIcon.icns",
-      "artifactName": "immichframe-${version}-${arch}-mac.${ext}"
-    }
+  "dependencies": {
+    "@tauri-apps/api": "^2.1.1"
   }
 }
