@@ -1,77 +1,95 @@
-name: Build Releases
-
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+permissions:
+  contents: write
+  discussions: write
+name: Release ImmichFrame
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-
+  release:
+    name: Release
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-        arch: [x64, arm64]
-
+        kind: ['linux-x64', 'linux-armv7l', 'linux-arm64', 'windows-x64', 'windows-arm64', 'mac-x64', 'mac-arm64']
+        include:
+          - kind: linux-x64
+            os: ubuntu-latest
+            target: linux-x64  
+          - kind: linux-armv7l
+            os: ubuntu-latest
+            target: linux-armv7l        
+          - kind: linux-arm64
+            os: ubuntu-latest
+            target: linux-arm64
+          - kind: windows-x64
+            os: windows-latest
+            target: win-x64    
+          - kind: windows-arm64
+            os: windows-latest
+            target: win-arm64               
+          - kind: mac-x64
+            os: macos-latest
+            target: mac-x64
+          - kind: mac-arm64
+            os: macos-latest
+            target: mac-arm64
+    runs-on: ${{ matrix.os }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build application (Linux and macOS)
-        if: ${{ matrix.os != 'windows-latest' }}
-        run: |
-          if [[ "${{ matrix.arch }}" == "x64" ]]; then
-            npm run build -- --linux --x64
-          elif [[ "${{ matrix.arch }}" == "arm64" ]]; then
-            npm run build -- --linux --arm64
-          fi
+      - name: Build Desktop
         shell: bash
-
-      - name: Build application (Windows)
-        if: matrix.os == 'windows-latest'
         run: |
-          if ($env:matrix_arch -eq 'x64') {
+          tag=$(git describe --tags --abbrev=0)
+          release_name="ImmichFrame-$tag-${{ matrix.target }}"
+          echo "build started"
+          # Build everything
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
             npm run build -- --win --x64
-          } elseif ($env:matrix_arch -eq 'arm64') {
+          elif [ "${{ matrix.target }}" == "win-arm64" ]; then
             npm run build -- --win --arm64
-          }
-        shell: pwsh
+          elif [ "${{ matrix.target }}" == "linux-armv7l" ]; then
+            npm run build -- --linux --armv7l      
+          elif [ "${{ matrix.target }}" == "linux-arm64" ]; then
+            npm run build -- --linux --arm64
+          elif [ "${{ matrix.target }}" == "linux-x64" ]; then
+            npm run build -- --linux --x64
+          elif [ "${{ matrix.target }}" == "mac-x64" ]; then
+            npm run build -- --mac --x64
+          elif [ "${{ matrix.target }}" == "mac-arm64" ]; then
+            npm run build -- --mac --arm64
+          fi
+          echo "build ended"
+          ls
 
-      - name: Set up Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Create Git tag
-        if: github.ref == 'refs/heads/main'
-        shell: bash
-        env:
-          TAG_NAME: "v${{ github.run_id }}"
-        run: |
-          git tag -a "$TAG_NAME" -m "Automated release $TAG_NAME"
-          git push origin "$TAG_NAME"
-
-      - name: Upload Release
-        uses: softprops/action-gh-release@v1
+          # Pack files
+          #7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          echo "zipping ended"
+          rm -f dist/*.yml
+          #rm -r "$release_name"
+      - name: Publish
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.TAG_NAME }}
           files: |
             dist/*.dmg
             dist/*.exe
             dist/*.AppImage
             dist/*.deb
             dist/*.rpm
+            dist/*.app
+            dist/*.pkg
+            dist/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

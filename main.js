@@ -5,7 +5,6 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 let mainWindow;
 const urlFilePath = path.join(app.getPath('userData'), 'settings.txt');
 
-// Function to create the main window
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
@@ -16,6 +15,7 @@ function createWindow() {
             contextIsolation: false,
             nodeIntegration: true,
             webviewTag: true,
+            session: require('electron').session.fromPartition('persist:no-cache')
         },
     });
 
@@ -30,7 +30,7 @@ function createWindow() {
     }
 }
 
-// IPC listener to retrive URL
+// IPC listener to retrieve URL
 ipcMain.handle('get-saved-url', async () => {
     try {
         const url = fs.readFileSync(urlFilePath, 'utf-8');
