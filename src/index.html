@@ -38,86 +38,91 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
       display: none;
-      /* Hidden by default */
       justify-content: center;
       align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
     .modal-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 300px;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
       text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.5rem;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .modal-content button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-content button:hover {
+      background-color: #0056b3;
     }
 
     .close {
       color: #aaa;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       position: absolute;
-      top: 10px;
+      top: 15px;
       right: 20px;
       cursor: pointer;
     }
 
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
+    .close:hover {
+      color: #000;
     }
 
-    /* Positioning the buttons */
     #btnSettings {
       top: 20px;
-      /* Top middle of the screen */
       left: 50%;
       transform: translateX(-50%);
     }
 
     #btnQuit {
       bottom: 20px;
-      /* Bottom middle of the screen */
       left: 50%;
       transform: translateX(-50%);
     }
   </style>
-  <script type="module" src="/main.js" defer>
-    // Import Tauri API
-    import { appWindow } from '@tauri-apps/api/window';
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // Event listener for the settings button
-      document.getElementById('btnSettings').addEventListener('click', () => {
-        console.log('Settings button clicked');
-        // Add your custom code here, e.g., open a settings modal
-      });
-
-      // Event listener for the quit button
-      document.getElementById('btnQuit').addEventListener('click', () => {
-        console.log('Quit button clicked');
-        // Quit the app using Tauri's appWindow API
-        appWindow.close();
-      });
-    });
-    // Handle clicks on links inside the iframe
-    const iframe = document.getElementById('webview');
-    iframe.addEventListener('load', () => {
-      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
-      // Find all anchor tags inside the iframe
-      const links = iframeDocument.querySelectorAll('a');
-
-      links.forEach(link => {
-        link.addEventListener('click', function (event) {
-          event.preventDefault(); // Prevent the default action of the link
-          const url = link.href;
-          window.open(url, '_blank'); // Open the URL in the default browser
-        });
-      });
-    });
+  <script type="module" src="/main.js" defer>   
+   
   </script>
+  
+  
 </head>
 
 <body>
