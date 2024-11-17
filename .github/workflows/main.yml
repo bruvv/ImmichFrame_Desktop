@@ -1,12 +1,10 @@
-name: publish
 on:
   push:
+    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*'
-  workflow_dispatch:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
-# This workflow will trigger on each push to the `release` branch to create or update a GitHub release, build your app, and upload the artifacts to the release.
-
+name: Release ImmichFrame_Desktop
 jobs:
   publish-tauri:
     permissions:
