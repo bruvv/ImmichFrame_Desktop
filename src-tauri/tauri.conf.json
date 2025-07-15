@@ -28,5 +28,8 @@
       "icons/AppIcon.icns",
       "icons/AppIcon.ico"
     ]
+  },
+  "package": {
+    "version": "1.0.1"
   }
 }
