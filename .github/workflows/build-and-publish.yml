@@ -27,10 +27,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0 # Mandatory to use the extract version from tag action
+      
       - name: Extract version from tag
         id: extract_version
-        uses: damienaicheh/extract-version-from-tag@v1
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
         with:
           tag: ${{ github.ref_name }}
 
