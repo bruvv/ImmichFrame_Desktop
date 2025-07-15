@@ -6,11 +6,55 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
 
-jobs:
-  publish-tauri:
-    permissions:
-      contents: write
+permissions:
+  contents: write
 
+jobs:
+  sync-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # Haal alle tags binnen :contentReference[oaicite:8]{index=8}
+
+      - name: Extract version from tag
+        id: extract_version
+        shell: bash
+        run: |
+          version=${GITHUB_REF#refs/tags/v} 
+          echo "version=$version" >> $GITHUB_OUTPUT  # Maak beschikbaar voor volgende stappen :contentReference[oaicite:9]{index=9}
+
+      - name: Bump Rust version in Cargo.toml
+        shell: bash
+        run: |
+          cargo install cargo-edit
+          cargo set-version "${{ steps.extract_version.outputs.version }}" \
+            --manifest-path src-tauri/Cargo.toml
+
+      - name: Update version in tauri.conf.json
+        shell: bash
+        run: |
+          jq --arg v "${{ steps.extract_version.outputs.version }}" \
+            '.package.version = $v' src-tauri/tauri.conf.json \
+            > tmp.json && mv tmp.json src-tauri/tauri.conf.json
+
+      - name: Bump npm version & lockfile
+        shell: bash
+        run: |
+          npm install --no-save
+          npm version "${{ steps.extract_version.outputs.version }}" --no-git-tag-version
+
+      - name: Commit version updates
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore: bump version to ${{ steps.extract_version.outputs.version }}"
+          branch: main
+          push_options: '--force'   # Forceer update van main :contentReference[oaicite:10]{index=10}
+
+  publish-tauri:
+    needs: sync-version          # Wacht op versie‑bumpjob :contentReference[oaicite:11]{index=11}
+    runs-on: ${{ matrix.platform }}
     strategy:
       fail-fast: false
       matrix:
@@ -23,51 +67,11 @@ jobs:
             args: ''
           - platform: 'windows-latest'
             args: ''
-    runs-on: ${{ matrix.platform }}
-
     steps:
-      - name: Checkout repository
+      - name: Checkout updated main
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
-      - name: Extract version from tag
-        if: github.ref_type == 'tag'
-        id: extract_version
-        shell: bash
-        run: |
-          version=${GITHUB_REF#refs/tags/v}
-          echo "version=$version" >> $GITHUB_OUTPUT
-
-      - name: Bump Rust version in Cargo.toml
-        if: github.ref_type == 'tag'
-        shell: bash          # forceer Bash, ook op windows-latest runners :contentReference[oaicite:2]{index=2}
-        run: |
-          cargo install cargo-edit
-          cargo set-version "${{ steps.extract_version.outputs.version }}" \
-            --manifest-path src-tauri/Cargo.toml
-
-      - name: Update version in tauri.conf.json
-        if: github.ref_type == 'tag'
-        shell: bash
-        run: |
-          jq --arg v "${{ steps.extract_version.outputs.version }}" \
-            '.package.version = $v' src-tauri/tauri.conf.json > tmp.json && \
-            mv tmp.json src-tauri/tauri.conf.json
-
-      - name: Bump npm version & lockfile
-        if: github.ref_type == 'tag'
-        shell: bash
-        run: |
-          npm install --no-save
-          npm version "${{ steps.extract_version.outputs.version }}" --no-git-tag-version
-
-      - name: Commit version updates
-        if: github.ref_type == 'tag'
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "chore: bump version to ${{ steps.extract_version.outputs.version }}"
-          branch: main
+          ref: main              # Haal de bump‑commit op :contentReference[oaicite:12]{index=12}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
