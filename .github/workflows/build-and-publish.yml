@@ -41,6 +41,7 @@ jobs:
 
       - name: Bump Rust version in Cargo.toml
         if: github.ref_type == 'tag'
+        shell: bash          # forceer Bash, ook op windows-latest runners :contentReference[oaicite:2]{index=2}
         run: |
           cargo install cargo-edit
           cargo set-version "${{ steps.extract_version.outputs.version }}" \
@@ -48,6 +49,7 @@ jobs:
 
       - name: Update version in tauri.conf.json
         if: github.ref_type == 'tag'
+        shell: bash
         run: |
           jq --arg v "${{ steps.extract_version.outputs.version }}" \
             '.package.version = $v' src-tauri/tauri.conf.json > tmp.json && \
@@ -55,6 +57,7 @@ jobs:
 
       - name: Bump npm version & lockfile
         if: github.ref_type == 'tag'
+        shell: bash
         run: |
           npm install --no-save
           npm version "${{ steps.extract_version.outputs.version }}" --no-git-tag-version
