@@ -10,26 +10,31 @@ jobs:
   publish-tauri:
     permissions:
       contents: write
+
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'; args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest'; args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'; args: ''
-          - platform: 'windows-latest'; args: ''
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
     runs-on: ${{ matrix.platform }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    # Fetch alle geschiedenis, nodig voor tags :contentReference[oaicite:5]{index=5}
+          fetch-depth: 0
 
       - name: Extract version from tag
-        if: github.ref_type == 'tag'  # Alleen bij tag events :contentReference[oaicite:6]{index=6}
+        if: github.ref_type == 'tag'
         id: extract_version
-        shell: bash                 # Forceer Bash voor parameterexpansie :contentReference[oaicite:7]{index=7}
+        shell: bash
         run: |
           version=${GITHUB_REF#refs/tags/v}
           echo "version=$version" >> $GITHUB_OUTPUT
@@ -45,8 +50,8 @@ jobs:
         if: github.ref_type == 'tag'
         run: |
           jq --arg v "${{ steps.extract_version.outputs.version }}" \
-            '.package.version = $v' src-tauri/tauri.conf.json \
-            > tmp.json && mv tmp.json src-tauri/tauri.conf.json
+            '.package.version = $v' src-tauri/tauri.conf.json > tmp.json && \
+            mv tmp.json src-tauri/tauri.conf.json
 
       - name: Bump npm version & lockfile
         if: github.ref_type == 'tag'
@@ -77,9 +82,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libjavascriptcoregtk-4.1-dev pkg-config \
-            libsoup-3.0-dev libwebkit2gtk-4.1-dev \
-            libayatana-appindicator3-dev librsvg2-dev \
+            libjavascriptcoregtk-4.1-dev \
+            pkg-config \
+            libsoup-3.0-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
             patchelf
 
       - name: Frontend dependencies installeren
