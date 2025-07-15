@@ -3,25 +3,26 @@ name: Build en Release Tauri app
 on:
   push:
     tags:
-      - 'v*.*.*'      # Trigger op semver-tags (bijv. v1.2.3) :contentReference[oaicite:6]{index=6}
-  workflow_dispatch:    # Hiermee maak je handmatige triggers mogelijk
+      - 'v*.*.*'
+  workflow_dispatch:
 
 jobs:
   publish-tauri:
     permissions:
       contents: write
+
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'   # Apple Silicon :contentReference[oaicite:7]{index=7}
+            args: '--target aarch64-apple-darwin'
           - platform: 'macos-latest'
-            args: '--target x86_64-apple-darwin'    # Intel :contentReference[oaicite:8]{index=8}
+            args: '--target x86_64-apple-darwin'
           - platform: 'ubuntu-22.04'
-            args: ''                                 # Linux build :contentReference[oaicite:9]{index=9}
+            args: ''
           - platform: 'windows-latest'
-            args: ''                                 # Windows build
+            args: ''
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -31,10 +32,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'                        # LTS-versie :contentReference[oaicite:10]{index=10}
+          node-version: '18'
 
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@stable         # Ondersteunt targets voor macOS :contentReference[oaicite:11]{index=11}
+      - name: Setup Rust toolchain en targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - name: Linux dependencies installeren
         if: matrix.platform == 'ubuntu-22.04'
@@ -42,23 +46,26 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libwebkit2gtk-4.0-dev \
-            libwebkit2gtk-4.1-dev \
             libappindicator3-dev \
             librsvg2-dev \
             patchelf
-                                                   # Benodigd voor AppImage en deb bundeling :contentReference[oaicite:12]{index=12}
 
       - name: Frontend dependencies installeren
-        run: yarn install                         # Pas aan naar npm of pnpm indien nodig :contentReference[oaicite:13]{index=13}
+        run: yarn install
 
-      - name: Build en Release via tauri-action
+      - name: Build en release via tauri-action
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}           # Bijvoorbeeld 'v1.2.3'
+          tagName: ${{ github.ref_name }}
           releaseName: 'App ${{ github.ref_name }}'
           releaseBody: 'Download de installatie via de assets.'
           releaseDraft: true
           prerelease: false
-          args: ${{ matrix.args }}                  # Platform-specifieke targets :contentReference[oaicite:14]{index=14}
+          args: ${{ matrix.args }}
+          projectPath: .
+          includeDebug: false
+          includeRelease: true
+          includeUpdaterJson: true
+          updaterJsonKeepUniversal: false
