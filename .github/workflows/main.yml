@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*.*.*'      # Trigger op semver-tags (bijv. v1.2.3) :contentReference[oaicite:6]{index=6}
+  workflow_dispatch:    # Hiermee maak je handmatige triggers mogelijk
 
 jobs:
   publish-tauri:
