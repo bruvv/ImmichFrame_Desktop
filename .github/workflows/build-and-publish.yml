@@ -28,13 +28,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Mandatory to use the extract version from tag action
-      
+          fetch-depth: 0  # alle tags in de history nodig
+
       - name: Extract version from tag
         id: extract_version
-        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
-        with:
-          tag: ${{ github.ref_name }}
+        run: |
+          # Strip 'refs/tags/v' prefix om '1.0.0' uit 'refs/tags/v1.0.0' te halen
+          version=${GITHUB_REF#refs/tags/v}                            # bash parameter expansion :contentReference[oaicite:1]{index=1}
+          echo "version=$version" >> $GITHUB_OUTPUT                   # stel output in voor latere stappen
 
       - name: Bump Rust version in Cargo.toml
         run: |
@@ -45,7 +46,8 @@ jobs:
       - name: Update version in tauri.conf.json
         run: |
           jq --arg v "${{ steps.extract_version.outputs.version }}" \
-            '.package.version = $v' src-tauri/tauri.conf.json > tmp.json && mv tmp.json src-tauri/tauri.conf.json
+            '.package.version = $v' src-tauri/tauri.conf.json \
+            > tmp.json && mv tmp.json src-tauri/tauri.conf.json
 
       - name: Bump npm version & lockfile
         run: |
