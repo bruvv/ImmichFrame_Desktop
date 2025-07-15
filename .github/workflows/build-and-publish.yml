@@ -14,47 +14,48 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+          - platform: 'macos-latest'; args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest'; args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'; args: ''
+          - platform: 'windows-latest'; args: ''
     runs-on: ${{ matrix.platform }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # alle tags in de history nodig
+          fetch-depth: 0    # Fetch alle geschiedenis, nodig voor tags :contentReference[oaicite:5]{index=5}
 
       - name: Extract version from tag
+        if: github.ref_type == 'tag'  # Alleen bij tag events :contentReference[oaicite:6]{index=6}
         id: extract_version
+        shell: bash                 # Forceer Bash voor parameterexpansie :contentReference[oaicite:7]{index=7}
         run: |
-          # Strip 'refs/tags/v' prefix om '1.0.0' uit 'refs/tags/v1.0.0' te halen
-          version=${GITHUB_REF#refs/tags/v}                            # bash parameter expansion :contentReference[oaicite:1]{index=1}
-          echo "version=$version" >> $GITHUB_OUTPUT                   # stel output in voor latere stappen
+          version=${GITHUB_REF#refs/tags/v}
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Bump Rust version in Cargo.toml
+        if: github.ref_type == 'tag'
         run: |
           cargo install cargo-edit
           cargo set-version "${{ steps.extract_version.outputs.version }}" \
             --manifest-path src-tauri/Cargo.toml
 
       - name: Update version in tauri.conf.json
+        if: github.ref_type == 'tag'
         run: |
           jq --arg v "${{ steps.extract_version.outputs.version }}" \
             '.package.version = $v' src-tauri/tauri.conf.json \
             > tmp.json && mv tmp.json src-tauri/tauri.conf.json
 
       - name: Bump npm version & lockfile
+        if: github.ref_type == 'tag'
         run: |
           npm install --no-save
           npm version "${{ steps.extract_version.outputs.version }}" --no-git-tag-version
 
       - name: Commit version updates
+        if: github.ref_type == 'tag'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore: bump version to ${{ steps.extract_version.outputs.version }}"
@@ -76,12 +77,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libjavascriptcoregtk-4.1-dev \
-            pkg-config \
-            libsoup-3.0-dev \
-            libwebkit2gtk-4.1-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
+            libjavascriptcoregtk-4.1-dev pkg-config \
+            libsoup-3.0-dev libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev librsvg2-dev \
             patchelf
 
       - name: Frontend dependencies installeren
