@@ -10,7 +10,6 @@ jobs:
   publish-tauri:
     permissions:
       contents: write
-
     strategy:
       fail-fast: false
       matrix:
@@ -33,7 +32,7 @@ jobs:
         id: extract_version
         uses: damienaicheh/extract-version-from-tag@v1
         with:
-          tag: ${{ github.ref_name }}    # haalt ’1.0.0’ uit ‘v1.0.0’
+          tag: ${{ github.ref_name }}
 
       - name: Bump Rust version in Cargo.toml
         run: |
@@ -54,7 +53,7 @@ jobs:
       - name: Commit version updates
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: chore: bump version to ${{ steps.extract_version.outputs.version }}
+          commit_message: "chore: bump version to ${{ steps.extract_version.outputs.version }}"
           branch: main
 
       - name: Setup Node.js
@@ -90,8 +89,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'App ${{ github.ref_name }}'
-          releaseBody: 'Download de installatie via de assets.'
+          releaseName: "App ${{ github.ref_name }}"
+          releaseBody: "Download de installatie via de assets."
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
