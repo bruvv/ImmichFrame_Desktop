@@ -29,6 +29,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Extract version from tag
+        id: extract_version
+        uses: damienaicheh/extract-version-from-tag@v1
+        with:
+          tag: ${{ github.ref_name }}    # haalt ’1.0.0’ uit ‘v1.0.0’
+
+      - name: Bump Rust version in Cargo.toml
+        run: |
+          cargo install cargo-edit
+          cargo set-version "${{ steps.extract_version.outputs.version }}" \
+            --manifest-path src-tauri/Cargo.toml
+
+      - name: Update version in tauri.conf.json
+        run: |
+          jq --arg v "${{ steps.extract_version.outputs.version }}" \
+            '.package.version = $v' src-tauri/tauri.conf.json > tmp.json && mv tmp.json src-tauri/tauri.conf.json
+
+      - name: Bump npm version & lockfile
+        run: |
+          npm install --no-save
+          npm version "${{ steps.extract_version.outputs.version }}" --no-git-tag-version
+
+      - name: Commit version updates
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: chore: bump version to ${{ steps.extract_version.outputs.version }}
+          branch: main
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -60,8 +88,6 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Optioneel indien nodig:
-          # PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 'App ${{ github.ref_name }}'
