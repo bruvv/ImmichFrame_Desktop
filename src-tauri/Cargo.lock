@@ -1494,7 +1494,7 @@ dependencies = [
 
 [[package]]
 name = "immichframe"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "dirs 4.0.0",
  "serde",
