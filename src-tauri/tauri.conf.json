@@ -22,19 +22,12 @@
   },
   "bundle": {
     "active": true,
-    "targets": [
-      "dmg",
-      "appimage",
-      "msi"
-    ],
+    "targets": ["dmg", "appimage", "msi"], 
     "icon": [
       "icons/AppIcon.png",
       "icons/AppIcon.icns",
       "icons/AppIcon.ico"
     ]
   },
-  "plugins": {},
-  "package": {
-    "version": "1.0.4"
-  }
+  "plugins": {}
 }
