@@ -36,8 +36,11 @@ jobs:
       - name: Update version in tauri.conf.json
         shell: bash
         run: |
+          # verwijder de package sectie en update root version
           jq --arg v "${{ steps.extract_version.outputs.version }}" \
-            '.package.version = $v' src-tauri/tauri.conf.json > tmp.json && mv tmp.json src-tauri/tauri.conf.json
+            'del(.package) | .version = $v' \
+            src-tauri/tauri.conf.json > tmp.json && \
+          mv tmp.json src-tauri/tauri.conf.json
 
       - name: Bump npm version & lockfile
         shell: bash
