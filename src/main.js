@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const urlInput = document.getElementById("urlInput");
   const saveUrlBtn = document.getElementById("saveUrl");
   const iframe = document.getElementById("webview");
-  const defaultUrl = "https://immichframe.github.io/ImmichFrame/";
+  const defaultUrl = "https://demo.immichframe.online/";
   
   try {
     const savedUrl = await invoke("read_url_from_file") || "";
