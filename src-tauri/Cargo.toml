@@ -1,6 +1,6 @@
 [package]
 name = "immichframe"
-version = "1.0.8"
+version = "1.0.9"
 description = "Photoframe for immich"
 authors = ["immichFrame"]
 edition = "2021"
