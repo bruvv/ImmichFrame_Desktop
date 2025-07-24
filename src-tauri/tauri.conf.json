@@ -34,23 +34,27 @@
       "icons/AppIcon.icns",
       "icons/AppIcon.ico"
     ],
-    "deb": {
-      "depends": [
-        "libjavascriptcoregtk-4.1-0",
-        "libsoup-3.0-0",
-        "libwebkit2gtk-4.1-0",
-        "libayatana-appindicator3-1",
-        "librsvg2-2"
-      ]
-    },
-    "rpm": {
-      "depends": [
-        "javascriptcoregtk4",
-        "libsoup3",
-        "webkit2gtk4",
-        "ayatana-appindicator3",
-        "librsvg2"
-      ]
+    "linux": {
+      "deb": {
+        "depends": [
+          "libjavascriptcoregtk-4.1-0",
+          "libsoup-3.0-0",
+          "libwebkit2gtk-4.1-0",
+          "libayatana-appindicator3-1",
+          "librsvg2-2"
+        ]
+      },
+      "rpm": {
+        "depends": [
+          "javascriptcoregtk4",
+          "libsoup3",
+          "webkit2gtk4",
+          "ayatana-appindicator3",
+          "librsvg2"
+        ],
+        "release": "1",
+        "epoch": 0
+      }
     }
   },
   "plugins": {}
