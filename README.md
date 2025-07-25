@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/immichFrame/ImmichFrame_Desktop">
-    <img src="src-tauri/icons/AppIcon.png" alt="Logo" width="200" height="200">
+    <img src="src-tauri/icons/icon.png" alt="Logo" width="200" height="200">
   </a>
 
   <h3 align="center">ImmichFrame Desktop</h3>
