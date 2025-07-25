@@ -1,6 +1,24 @@
-# Tauri + Vanilla
+<div align="center">
+  <a href="https://github.com/immichFrame/ImmichFrame_Desktop">
+    <img src="src-tauri/icons/AppIcon.png" alt="Logo" width="200" height="200">
+  </a>
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
+  <h3 align="center">ImmichFrame Desktop</h3>
+
+  <p align="center">
+    Desktop application that runs <a href="https://github.com/immichFrame/ImmichFrame">ImmichFrame</a> fullscreen.
+    <br />
+    <br />
+    <a href="https://immichframe.online/docs/getting-started/apps#desktop-windows-macos-linux">Documentation</a>
+  <p>
+</div>
+
+## 📄 Documentation
+You can find the documentation [here](https://immichframe.online/docs/getting-started/apps#desktop-windows-macos-linux).
+
+# Development
+
+This application is built with [Tauri](https://github.com/tauri-apps/tauri).
 
 ## Recommended IDE Setup
 
