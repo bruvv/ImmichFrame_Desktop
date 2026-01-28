@@ -9,12 +9,12 @@
     Desktop application that runs <a href="https://github.com/immichFrame/ImmichFrame">ImmichFrame</a> fullscreen.
     <br />
     <br />
-    <a href="https://immichframe.online/docs/getting-started/apps#desktop-windows-macos-linux">Documentation</a>
+    <a href="https://immichframe.dev">Documentation</a>
   <p>
 </div>
 
 ## 📄 Documentation
-You can find the documentation [here](https://immichframe.online/docs/getting-started/apps#desktop-windows-macos-linux).
+You can find the documentation [here](https://immichframe.dev).
 
 # Development
 
